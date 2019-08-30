@@ -3,7 +3,6 @@
 #[macro_use]
 extern crate neon;
 extern crate carrier;
-extern crate crossbeam_channel;
 extern crate log;
 
 use neon::prelude::*;

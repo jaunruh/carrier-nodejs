@@ -151,7 +151,8 @@ dependencies = [
 
 [[package]]
 name = "carrier"
-version = "0.10.1"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "axon 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "bs58 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -195,11 +196,10 @@ dependencies = [
 name = "carrier-nodejs"
 version = "0.10.0"
 dependencies = [
- "carrier 0.10.1",
- "crossbeam-channel 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "carrier 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "neon 0.3.1",
+ "neon 0.3.1 (git+https://github.com/aep/neon.git)",
  "neon-build 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -252,14 +252,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "crc8"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "crossbeam-channel"
-version = "0.3.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "crossbeam-utils 0.6.6 (registry+https://github.com/rust-lang/crates.io-index)",
-]
 
 [[package]]
 name = "crossbeam-utils"
@@ -562,16 +554,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "neon"
 version = "0.3.1"
+source = "git+https://github.com/aep/neon.git#c827b6d60e4560167d14846bfddcbfa6a9df6c38"
 dependencies = [
  "cslice 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "neon-build 0.3.1",
- "neon-runtime 0.3.1",
+ "neon-build 0.3.1 (git+https://github.com/aep/neon.git)",
+ "neon-runtime 0.3.1 (git+https://github.com/aep/neon.git)",
  "semver 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "neon-build"
 version = "0.3.1"
+source = "git+https://github.com/aep/neon.git#c827b6d60e4560167d14846bfddcbfa6a9df6c38"
 
 [[package]]
 name = "neon-build"
@@ -581,6 +575,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "neon-runtime"
 version = "0.3.1"
+source = "git+https://github.com/aep/neon.git#c827b6d60e4560167d14846bfddcbfa6a9df6c38"
 dependencies = [
  "cc 1.0.41 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1322,6 +1317,7 @@ dependencies = [
 "checksum byteorder 1.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "a7c3dd8985a7111efc5c80b44e23ecdd8c007de8ade3b96595387e812b957cf5"
 "checksum bytes 0.4.12 (registry+https://github.com/rust-lang/crates.io-index)" = "206fdffcfa2df7cbe15601ef46c813fce0965eb3286db6b56c583b814b51c81c"
 "checksum c2-chacha 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "7d64d04786e0f528460fc884753cf8dddcc466be308f6026f8e355c41a0e4101"
+"checksum carrier 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c0f7eb854caa59d442f9a3cdef0fcbf6cf72378df56ad5ec6bf1ed99b184d1db"
 "checksum cc 1.0.41 (registry+https://github.com/rust-lang/crates.io-index)" = "8dae9c4b8fedcae85592ba623c4fd08cfdab3e3b72d6df780c6ead964a69bfff"
 "checksum cfg-if 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)" = "b486ce3ccf7ffd79fdeb678eac06a9e6c09fc88d33836340becb8fffe87c5e33"
 "checksum clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5067f5bb2d80ef5d68b4c87db81601f0b75bca627bc2ef76b141d7b846a3c6d9"
@@ -1329,7 +1325,6 @@ dependencies = [
 "checksum cloudabi 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)" = "ddfc5b9aa5d4507acaf872de71051dfd0e309860e88966e1051e462a077aac4f"
 "checksum constant_time_eq 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)" = "995a44c877f9212528ccc74b21a232f66ad69001e40ede5bcee2ac9ef2657120"
 "checksum crc8 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "b31d2174830f395fd7e413c2f8a119252de36356982f805f495269331e97559e"
-"checksum crossbeam-channel 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)" = "c8ec7fcd21571dc78f96cc96243cab8d8f035247c3efd16c687be154c3fa9efa"
 "checksum crossbeam-utils 0.6.6 (registry+https://github.com/rust-lang/crates.io-index)" = "04973fa96e96579258a5091af6003abde64af786b860f18622b82e026cca60e6"
 "checksum cslice 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "697c714f50560202b1f4e2e09cd50a421881c83e9025db75d15f276616f04f40"
 "checksum curve25519-dalek 1.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = "8b7dcd30ba50cdf88b55b033456138b7c0ac4afdc436d82e1b79f370f24cc66d"
@@ -1367,7 +1362,10 @@ dependencies = [
 "checksum miow 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "8c1f2f3b1cf331de6896aabf6e9d55dca90356cc9960cca7eaaf408a355ae919"
 "checksum mtdparts 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "f8429ab67140e48558f59a9b667fa60fed536f5d6de8e8cbb073ff8ecc303d68"
 "checksum multimap 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2eb04b9f127583ed176e163fb9ec6f3e793b87e21deedd5734a69386a18a0151"
+"checksum neon 0.3.1 (git+https://github.com/aep/neon.git)" = "<none>"
+"checksum neon-build 0.3.1 (git+https://github.com/aep/neon.git)" = "<none>"
 "checksum neon-build 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "ea89bb3c6c47c7c90f93b185a7ea65d8af2cce588d698dd4a2a75b2c914e5ece"
+"checksum neon-runtime 0.3.1 (git+https://github.com/aep/neon.git)" = "<none>"
 "checksum net2 0.2.33 (registry+https://github.com/rust-lang/crates.io-index)" = "42550d9fb7b6684a6d404d9fa7250c2eb2646df731d1c06afc06dcee9e1bcf88"
 "checksum nix 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)" = "becb657d662f1cd2ef38c7ad480ec6b8cf9e96b27adb543e594f9cf0f2e6065c"
 "checksum nix 0.13.1 (registry+https://github.com/rust-lang/crates.io-index)" = "4dbdc256eaac2e3bd236d93ad999d3479ef775c863dbda3068c4006a92eec51b"

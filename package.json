@@ -1,5 +1,5 @@
 {
-  "name": "carrier-nodejs",
+  "name": "devguard-carrier",
   "version": "0.10.0",
   "description": "carrier nodejs api",
   "main": "lib/index.js",
@@ -31,5 +31,5 @@
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
     "module_path": "./native",
     "pkg_path": "."
-  },
+  }
 }

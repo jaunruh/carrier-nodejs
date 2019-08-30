@@ -15,7 +15,7 @@ cache: cargo
 before_install:
   # Install Rust and Cargo
   - curl https://sh.rustup.rs -sSf > /tmp/rustup.sh
-  - sh /tmp/rustup.sh -y
+  - sh /tmp/rustup.sh -y --default-toolchain nightly
   - export PATH="$HOME/.cargo/bin:$PATH"
   - source "$HOME/.cargo/env"
   # Install NPM packages

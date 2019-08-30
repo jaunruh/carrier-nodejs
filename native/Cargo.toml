@@ -1,0 +1,22 @@
+[package]
+name = "carrier-nodejs"
+version = "0.10.0"
+authors = ["Arvid E. Picciani <arvid@devguard.io>"]
+license = "MIT"
+build = "build.rs"
+exclude = ["artifacts.json", "index.node"]
+
+[lib]
+name = "carrier_nodejs"
+crate-type = ["cdylib"]
+
+[build-dependencies]
+neon-build = "0.3.1"
+
+[dependencies]
+neon = { path = "/home/aep/kram/neon/"}
+carrier = { path = "/home/aep/proj/devguard/carrier"}
+crossbeam-channel = "0.3.9"
+log                 = "0.4"
+env_logger          = "0.6.0"
+

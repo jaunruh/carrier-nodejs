@@ -285,33 +285,36 @@ struct SimpleGetTask{
 impl Task for SimpleGetTask {
     // If the computation does not error, it will return an i32.
     // Otherwise, it will return a String as an error
-    type Output     = Vec<u8>;
+    type Output     = (carrier::headers::Headers, Option<Vec<u8>>);
     type Error      = String;
-    type JsEvent    = JsArrayBuffer;
+    type JsEvent    = JsObject;
 
     // Perform expensive computation here. What runs in here
     // will not block the main thread. Will run in a background
     // thread
-    fn perform(&self) -> Result<Vec<u8>, String> {
+    fn perform(&self) -> Result<(carrier::headers::Headers, Option<Vec<u8>>), String> {
 
         let rr = Arc::new(Mutex::new(None));
         let rr2 = rr.clone();
+        let rh = Arc::new(Mutex::new(None));
+        let rh2 = rh.clone();
 
         let config = carrier::config::load().unwrap();
 
         carrier::connect(config).open(
             self.identity.clone(),
             self.headers.clone(),
-            move |poll, ep, stream| return_one(poll, ep, stream, rr),
+            move |poll, ep, stream| return_one(poll, ep, stream, rh, rr),
             ).run().unwrap();
 
-        let result = "pass";
+        let rr2 = Arc::try_unwrap(rr2).unwrap().into_inner().unwrap();
+        let rh2 = match Arc::try_unwrap(rh2).unwrap().into_inner().unwrap() {
+            None => return Err("received no headers".into()),
+            Some(v) => v,
+        };
 
-        if result != "pass" {
-            return Err("This will fail".to_string());
-        }
 
-        Ok(Arc::try_unwrap(rr2).unwrap().into_inner().unwrap().unwrap())
+        Ok((rh2, rr2))
     }
 
     // When perform() is finished running, complete() will convert
@@ -319,14 +322,40 @@ impl Task for SimpleGetTask {
     // converting a Rust i32 to a JsNumber. This value will be passed
     // to the callback. perform() is executed on the main thread at
     // some point after the background task is completed.
-    fn complete(self, mut cx: TaskContext, result: Result<Vec<u8>, String>) -> JsResult<JsArrayBuffer> {
-        let result =  result.unwrap();
-        let mut b = JsArrayBuffer::new(&mut cx, result.len() as u32)?;
-        cx.borrow_mut(&mut b, |data| {
-            let mut slice = data.as_mut_slice::<u8>();
-            slice.write_all(&result).unwrap();
-        });
-        Ok(b)
+    fn complete(self, mut cx: TaskContext, result: Result<(carrier::headers::Headers, Option<Vec<u8>>), String>) -> JsResult<JsObject> {
+
+        let (rh, rr) =  match result {
+            Err(e) => {
+                let e = cx.string(e);
+                return cx.throw(e);
+            },
+            Ok(v)  => v,
+        };
+        let h = cx.empty_object();
+        for (k,v) in rh.iter() {
+            let v = cx.string(String::from_utf8_lossy(&v));
+            h.set(&mut cx, String::from_utf8_lossy(&k).as_ref(), v)?;
+        }
+
+        let obj = cx.empty_object();
+        obj.set(&mut cx, "headers", h)?;
+
+
+
+        match rr {
+            Some(v) => {
+                let mut b = JsArrayBuffer::new(&mut cx, v.len() as u32)?;
+                cx.borrow_mut(&mut b, |data| {
+                    let mut slice = data.as_mut_slice::<u8>();
+                    slice.write_all(&v).unwrap();
+                });
+                obj.set(&mut cx, "data", b)?;
+            },
+            None  => {
+            }
+        };
+
+        return Ok(obj);
     }
 }
 
@@ -354,22 +383,23 @@ pub fn simple_get(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
 #[osaka]
 fn return_one(
-    _poll: osaka::Poll,
-    ep: carrier::endpoint::Handle,
-    mut stream: carrier::endpoint::Stream,
-    rr: Arc<Mutex<Option<Vec<u8>>>>,
+    _poll:  osaka::Poll,
+    ep:     carrier::endpoint::Handle,
+    mut     stream: carrier::endpoint::Stream,
+    rh:     Arc<Mutex<Option<carrier::headers::Headers>>>,
+    rr:     Arc<Mutex<Option<Vec<u8>>>>,
     ) {
     let _d = carrier::util::defer(move || {
         ep.disconnect(ep.broker(), carrier::packet::DisconnectReason::Application);
     });
 
     let headers = carrier::headers::Headers::decode(&osaka::sync!(stream)).unwrap();
-    println!("{:?}", headers);
 
-    if headers.get(b":status") != Some(b"200") {
+    let status = headers.status().unwrap_or(999);
+    *rh.lock().unwrap() = Some(headers);
+    if status > 299 {
         return;
     }
-
 
     let r = osaka::sync!(stream);
     *rr.lock().unwrap() = Some(r);

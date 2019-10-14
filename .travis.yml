@@ -12,6 +12,11 @@ node_js:
 
 cache: cargo
 
+addons:
+  homebrew:
+    packages:
+    - yarn
+
 before_install:
   # Install Rust and Cargo
   - curl https://sh.rustup.rs -sSf > /tmp/rustup.sh

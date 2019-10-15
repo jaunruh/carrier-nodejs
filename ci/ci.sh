@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -ex
 
 if [ "${TRAVIS_OS_NAME}" = "osx" ];

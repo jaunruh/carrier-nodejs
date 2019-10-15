@@ -9,9 +9,7 @@ use neon::prelude::*;
 use carrier::osaka::{self, osaka};
 use std::sync::{Arc, Mutex};
 use std::io::Write;
-use std::sync::mpsc::{self, RecvTimeoutError, TryRecvError};
 use std::thread;
-use std::time::Duration;
 
 fn identity(mut cx: FunctionContext) -> JsResult<JsString> {
     let config = carrier::config::load().unwrap();
@@ -237,7 +235,7 @@ declare_types! {
                             cx.string(identity.to_string()).upcast(),
                             peer.upcast(),
                         ];
-                        let r = match emit.call(cx, this, args) {
+                        match emit.call(cx, this, args) {
                             Err(e) => {
                                 eprintln!("{:?}", e);
                                 return;
@@ -299,13 +297,13 @@ impl Task for SimpleGetTask {
         let rh = Arc::new(Mutex::new(None));
         let rh2 = rh.clone();
 
-        let config = carrier::config::load().unwrap();
+        let config = carrier::config::load().map_err(map_err)?;
 
         carrier::connect(config).open(
             self.identity.clone(),
             self.headers.clone(),
             move |poll, ep, stream| return_one(poll, ep, stream, rh, rr),
-            ).run().unwrap();
+            ).run().map_err(map_err)?;
 
         let rr2 = Arc::try_unwrap(rr2).unwrap().into_inner().unwrap();
         let rh2 = match Arc::try_unwrap(rh2).unwrap().into_inner().unwrap() {
@@ -405,3 +403,8 @@ fn return_one(
     *rr.lock().unwrap() = Some(r);
 }
 
+
+
+fn map_err<E: std::error::Error> (e: E) -> String {
+    format!("{:?}", e)
+}
